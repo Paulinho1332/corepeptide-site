@@ -1,6 +1,6 @@
 [build]
   base = "."
-  command = "echo 'Bypassing build script'"
+  command = "pnpm --filter client build"
   publish = "client/dist"
 
 [[redirects]]
