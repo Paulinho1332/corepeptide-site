@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'wouter';
-import { ShoppingCart, User, Search, Menu, X } from 'lucide-react';
+import { ShoppingCart, Search, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import AccountDropdown from './AccountDropdown';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -36,9 +37,7 @@ export default function Header() {
 
           {/* Right Icons */}
           <div className="flex items-center gap-4">
-            <button className="text-foreground hover:text-accent transition-colors">
-              <User size={24} />
-            </button>
+            <AccountDropdown />
             <Link href="/cart">
               <a className="relative text-foreground hover:text-accent transition-colors">
                 <ShoppingCart size={24} />
@@ -47,9 +46,11 @@ export default function Header() {
                 </span>
               </a>
             </Link>
-            <button className="text-foreground hover:text-accent transition-colors">
-              <Search size={24} />
-            </button>
+            <Link href="/peptides">
+              <a className="text-foreground hover:text-accent transition-colors">
+                <Search size={24} />
+              </a>
+            </Link>
 
             {/* Mobile Menu Toggle */}
             <button

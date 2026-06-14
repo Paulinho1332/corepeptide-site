@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Peptides from "./pages/Peptides";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 
@@ -19,6 +20,7 @@ function Router() {
       <Route path={"/peptides"} component={Peptides} />
       <Route path={"/product/:id"} component={ProductDetail} />
       <Route path={"/cart"} component={Cart} />
+      <Route path={"/checkout"} component={Checkout} />
       <Route path={"/about"} component={About} />
       <Route path={"/contact"} component={Contact} />
       <Route path={"/404"} component={NotFound} />

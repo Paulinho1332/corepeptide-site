@@ -188,11 +188,15 @@ export default function Cart() {
                     </span>
                   </div>
 
-                  <Button
-                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-6"
-                  >
-                    Proceed to Checkout
-                  </Button>
+                  <Link href="/checkout">
+                    <a>
+                      <Button
+                        className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-6"
+                      >
+                        Proceed to Checkout
+                      </Button>
+                    </a>
+                  </Link>
 
                   <Link href="/peptides">
                     <a>

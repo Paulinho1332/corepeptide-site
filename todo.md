@@ -12,9 +12,9 @@
 ## Frontend - Header & Navigation
 - [x] Build sticky header component with logo
 - [x] Add navigation links (Home, Peptides for Sale, About Us, Contact)
-- [x] Add user account icon with dropdown menu
+- [x] Add user account icon with dropdown menu (with login/logout)
 - [x] Add shopping cart icon with item count badge
-- [x] Add search icon with search functionality
+- [x] Add search icon with search functionality (links to peptides page)
 - [x] Implement responsive mobile menu
 
 ## Frontend - Hero Section
@@ -59,10 +59,10 @@
 - [x] Show empty cart message when no items
 
 ## Frontend - Checkout Flow
-- [ ] Build checkout page with order summary (Future enhancement)
-- [ ] Add shipping address form (Future enhancement)
-- [ ] Add billing address form (Future enhancement)
-- [ ] Add payment method selection (Future enhancement)
+- [x] Build checkout page with order summary
+- [x] Add shipping address form
+- [x] Add billing address form (with same-as-shipping option)
+- [x] Add payment method selection (card/bank transfer)
 - [ ] Implement order confirmation page (Future enhancement)
 - [ ] Add order tracking/history in user account (Future enhancement)
 
@@ -110,11 +110,11 @@
 - [x] Add hover and active states to interactive elements
 
 ## Responsive Design
-- [x] Test and fix mobile layout (< 640px)
-- [x] Test and fix tablet layout (640px - 1024px)
-- [x] Test and fix desktop layout (> 1024px)
-- [x] Ensure touch-friendly buttons and spacing on mobile
-- [x] Test navigation on all screen sizes
+- [x] Mobile layout responsive (< 640px)
+- [x] Tablet layout responsive (640px - 1024px)
+- [x] Desktop layout responsive (> 1024px)
+- [x] Touch-friendly buttons and spacing on mobile
+- [x] Navigation responsive across all screen sizes
 
 ## Testing & Quality
 - [ ] Write unit tests for cart logic (Future enhancement)
