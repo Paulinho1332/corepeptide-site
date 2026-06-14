@@ -3,9 +3,13 @@
   command = "pnpm --filter client build"
   publish = "client/dist"
 
+[build.environment]
+  NODE_VERSION = "22"
+  NODE_ENV = "production"
+
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/server/:splat"
+  to = "https://corepeptide-backend.onrender.com/api/:splat"
   status = 200
   force = true
 
