@@ -86,26 +86,50 @@ declare global {
   }
 }
 
-const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
+const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY || "demo-key";
 const FORGE_BASE_URL =
   import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
   "https://forge.butterfly-effect.dev";
 const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
 
 function loadMapScript() {
-  return new Promise(resolve => {
-    const script = document.createElement("script");
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
-    script.async = true;
-    script.crossOrigin = "anonymous";
-    script.onload = () => {
-      resolve(null);
-      script.remove(); // Clean up immediately
-    };
-    script.onerror = () => {
-      console.error("Failed to load Google Maps script");
-    };
-    document.head.appendChild(script);
+  return new Promise((resolve, reject) => {
+    // Validate API key and URL before attempting to load
+    if (!API_KEY || API_KEY === "demo-key") {
+      console.warn("Google Maps API key not configured. Maps functionality will be limited.");
+      reject(new Error("Google Maps API key not configured"));
+      return;
+    }
+
+    if (!MAPS_PROXY_URL) {
+      console.error("Maps proxy URL is invalid");
+      reject(new Error("Maps proxy URL is invalid"));
+      return;
+    }
+
+    try {
+      const script = document.createElement("script");
+      const scriptUrl = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
+      
+      // Validate URL before setting it
+      new URL(scriptUrl); // This will throw if URL is invalid
+      
+      script.src = scriptUrl;
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      script.onload = () => {
+        resolve(null);
+        script.remove(); // Clean up immediately
+      };
+      script.onerror = () => {
+        console.error("Failed to load Google Maps script");
+        reject(new Error("Failed to load Google Maps script"));
+      };
+      document.head.appendChild(script);
+    } catch (error) {
+      console.error("Invalid Maps script URL:", error);
+      reject(error);
+    }
   });
 }
 
@@ -126,11 +150,24 @@ export function MapView({
   const map = useRef<google.maps.Map | null>(null);
 
   const init = usePersistFn(async () => {
-    await loadMapScript();
+    try {
+      await loadMapScript();
+    } catch (error) {
+      console.error("Map initialization failed:", error);
+      // Continue rendering the container even if maps fail to load
+      return;
+    }
+
     if (!mapContainer.current) {
       console.error("Map container not found");
       return;
     }
+
+    if (!window.google?.maps) {
+      console.error("Google Maps API not available");
+      return;
+    }
+
     map.current = new window.google.maps.Map(mapContainer.current, {
       zoom: initialZoom,
       center: initialCenter,
