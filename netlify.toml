@@ -1,17 +1,13 @@
 [build]
   base = "."
-  command = "pnpm build"
-  functions = "dist/functions"
-  publish = "dist/public"
-
-[build.environment]
-  NODE_VERSION = "22"
-  NODE_ENV = "production"
+  command = "echo 'Bypassing build script'"
+  publish = "client/dist"
 
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/server:splat"
+  to = "https://corepeptide-backend.onrender.com/api/:splat"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"
