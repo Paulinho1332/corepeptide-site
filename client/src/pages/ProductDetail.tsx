@@ -3,11 +3,13 @@ import { useParams } from 'wouter';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { trpc } from '@/lib/trpc';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { getLoginUrl } from '@/const';
+import { Download, FileText } from 'lucide-react';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -138,79 +140,129 @@ export default function ProductDetail() {
         </div>
       </section>
 
-      {/* Description Section */}
+      {/* Description & COA Tabs Section */}
       <section className="py-16 bg-card/50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl">
-            <div className="border-b border-border mb-8">
-              <h2 className="text-2xl font-bold mb-6">{product.name}</h2>
-            </div>
-            
-            <div className="space-y-8 text-foreground">
-              {/* Main Description */}
-              {product.description && (
-                <div className="prose prose-invert max-w-none">
-                  <div className="whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
-                    {product.description}
+            <Tabs defaultValue="description" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 bg-background border-b border-border rounded-none mb-8">
+                <TabsTrigger value="description" className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent">Product Description</TabsTrigger>
+                <TabsTrigger value="coa" className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent">Certificate of Analysis</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="description" className="space-y-8 text-foreground">
+                <div className="border-b border-border mb-8">
+                  <h2 className="text-2xl font-bold mb-6">{product.name}</h2>
+                </div>
+                
+                {/* Main Description */}
+                {product.description && (
+                  <div className="prose prose-invert max-w-none">
+                    <div className="whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
+                      {product.description}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Chemical Makeup Section */}
+                <div className="p-6 bg-background rounded-lg border border-border">
+                  <h3 className="text-xl font-bold mb-4">Chemical Specifications</h3>
+                  <div className="space-y-2 text-sm">
+                    <p><span className="font-semibold">Product Name:</span> {product.name}</p>
+                    <p><span className="font-semibold">Form:</span> Lyophilized powder</p>
+                    <p><span className="font-semibold">Purity:</span> &gt; 99%</p>
+                    <p><span className="font-semibold">SKU:</span> P-{product.name.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 10)}</p>
+                    <p><span className="font-semibold">Storage:</span> Store in a cool, dry place. Protect from light and moisture.</p>
                   </div>
                 </div>
-              )}
-              
-              {/* Chemical Makeup Section */}
-              <div className="p-6 bg-background rounded-lg border border-border">
-                <h3 className="text-xl font-bold mb-4">Chemical Specifications</h3>
-                <div className="space-y-2 text-sm">
-                  <p><span className="font-semibold">Product Name:</span> {product.name}</p>
-                  <p><span className="font-semibold">Form:</span> Lyophilized powder</p>
-                  <p><span className="font-semibold">Purity:</span> {'>'} 99%</p>
-                  <p><span className="font-semibold">SKU:</span> P-{product.name.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 10)}</p>
-                  <p><span className="font-semibold">Storage:</span> Store in a cool, dry place. Protect from light and moisture.</p>
-                </div>
-              </div>
 
-              {/* Research Information */}
-              <div className="p-6 bg-background rounded-lg border border-border">
-                <h3 className="text-xl font-bold mb-4">Research Information</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  This product is intended for research, laboratory, or analytical purposes only. It is not intended for human consumption, veterinary use, or any clinical application.
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  All products are supplied as research chemicals and should be handled by trained personnel in appropriate laboratory settings.
-                </p>
-              </div>
-
-              {/* Usage Guidelines */}
-              <div className="p-6 bg-background rounded-lg border border-border">
-                <h3 className="text-xl font-bold mb-4">Usage Guidelines</h3>
-                <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-                  <li>For research and laboratory use only</li>
-                  <li>Not for human or animal consumption</li>
-                  <li>Handle in appropriate laboratory settings</li>
-                  <li>Store in cool, dry place away from light</li>
-                  <li>Keep out of reach of children</li>
-                  <li>Follow all local regulations and guidelines</li>
-                </ul>
-              </div>
-
-              {/* Important Disclaimer */}
-              <div className="p-6 bg-amber-900/20 border border-amber-700/50 rounded-lg">
-                <h3 className="text-lg font-bold mb-3 text-amber-100">Important Disclaimer</h3>
-                <div className="space-y-3 text-sm text-amber-50/80">
-                  <p>
-                    All products are sold for research, laboratory, or analytical purposes only and are not for human consumption.
+                {/* Research Information */}
+                <div className="p-6 bg-background rounded-lg border border-border">
+                  <h3 className="text-xl font-bold mb-4">Research Information</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    This product is intended for research, laboratory, or analytical purposes only. It is not intended for human consumption, veterinary use, or any clinical application.
                   </p>
-                  <p>
-                    Core Peptides is a chemical supplier. Core Peptides is not a compounding pharmacy or chemical compounding facility as defined under 503A of the Federal Food, Drug, and Cosmetic act. Core Peptides is not an outsourcing facility defined under 503B of the Federal Food, Drug, and Cosmetic act.
-                  </p>
-                  <p>
-                    The statements made within this website have not been evaluated by the US Food and Drug Administration. The products we offer are not intended to diagnose, treat, cure or prevent any disease.
-                  </p>
-                  <p>
-                    Human/Animal Consumption Prohibited. Laboratory/In-Vitro Experimental Use Only.
+                  <p className="text-sm text-muted-foreground">
+                    All products are supplied as research chemicals and should be handled by trained personnel in appropriate laboratory settings.
                   </p>
                 </div>
-              </div>
-            </div>
+
+                {/* Usage Guidelines */}
+                <div className="p-6 bg-background rounded-lg border border-border">
+                  <h3 className="text-xl font-bold mb-4">Usage Guidelines</h3>
+                  <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+                    <li>For research and laboratory use only</li>
+                    <li>Not for human or animal consumption</li>
+                    <li>Handle in appropriate laboratory settings</li>
+                    <li>Store in cool, dry place away from light</li>
+                    <li>Keep out of reach of children</li>
+                    <li>Follow all local regulations and guidelines</li>
+                  </ul>
+                </div>
+
+                {/* Important Disclaimer */}
+                <div className="p-6 bg-amber-900/20 border border-amber-700/50 rounded-lg">
+                  <h3 className="text-lg font-bold mb-3 text-amber-100">Important Disclaimer</h3>
+                  <div className="space-y-3 text-sm text-amber-50/80">
+                    <p>
+                      All products are sold for research, laboratory, or analytical purposes only and are not for human consumption.
+                    </p>
+                    <p>
+                      Core Peptides is a chemical supplier. Core Peptides is not a compounding pharmacy or chemical compounding facility as defined under 503A of the Federal Food, Drug, and Cosmetic act. Core Peptides is not an outsourcing facility defined under 503B of the Federal Food, Drug, and Cosmetic act.
+                    </p>
+                    <p>
+                      The statements made within this website have not been evaluated by the US Food and Drug Administration. The products we offer are not intended to diagnose, treat, cure or prevent any disease.
+                    </p>
+                    <p>
+                      Human/Animal Consumption Prohibited. Laboratory/In-Vitro Experimental Use Only.
+                    </p>
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="coa" className="space-y-8">
+                <div className="border-b border-border mb-8">
+                  <h2 className="text-2xl font-bold mb-6">Certificate of Analysis</h2>
+                </div>
+                
+                <div className="flex flex-col items-center justify-center py-16 bg-background rounded-lg border border-border">
+                  <FileText className="w-20 h-20 text-accent mb-6" />
+                  <h3 className="text-2xl font-bold text-foreground mb-3">Certificate of Analysis</h3>
+                  <p className="text-muted-foreground text-center mb-8 max-w-md">
+                    Download the Certificate of Analysis for {product.name} to verify purity, potency, and quality specifications.
+                  </p>
+                  <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold flex items-center gap-2 mb-8">
+                    <Download className="w-5 h-5" />
+                    Download COA (PDF)
+                  </Button>
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-2">Document Information:</p>
+                    <p className="text-sm font-semibold text-foreground">{product.name}</p>
+                    <p className="text-xs text-muted-foreground mt-2">Batch Analysis Report</p>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-background rounded-lg border border-border">
+                  <h3 className="text-lg font-bold mb-4">About Certificate of Analysis</h3>
+                  <div className="space-y-3 text-sm text-muted-foreground">
+                    <p>
+                      Our Certificate of Analysis (COA) provides comprehensive quality assurance documentation for each product batch.
+                    </p>
+                    <p>
+                      The COA includes:
+                    </p>
+                    <ul className="list-disc list-inside space-y-2 ml-2">
+                      <li>Purity analysis and test results</li>
+                      <li>Identity confirmation</li>
+                      <li>Potency verification</li>
+                      <li>Microbial testing results</li>
+                      <li>Heavy metal analysis</li>
+                      <li>Batch-specific information</li>
+                    </ul>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </section>
