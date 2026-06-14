@@ -88,9 +88,6 @@ export default function ProductDetail() {
                 <p className="text-4xl font-bold text-accent mb-4">
                   ${priceInDollars}
                 </p>
-                <p className="text-muted-foreground text-lg">
-                  {product.description || 'Research-grade peptide product'}
-                </p>
               </div>
 
               {/* Stock Status */}
@@ -135,6 +132,83 @@ export default function ProductDetail() {
                 <p className="text-xs text-muted-foreground">
                   This product is sold for research, laboratory, or analytical purposes only and is not for human consumption.
                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Description Section */}
+      <section className="py-16 bg-card/50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl">
+            <div className="border-b border-border mb-8">
+              <h2 className="text-2xl font-bold mb-6">{product.name}</h2>
+            </div>
+            
+            <div className="space-y-8 text-foreground">
+              {/* Main Description */}
+              {product.description && (
+                <div className="prose prose-invert max-w-none">
+                  <div className="whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
+                    {product.description}
+                  </div>
+                </div>
+              )}
+              
+              {/* Chemical Makeup Section */}
+              <div className="p-6 bg-background rounded-lg border border-border">
+                <h3 className="text-xl font-bold mb-4">Chemical Specifications</h3>
+                <div className="space-y-2 text-sm">
+                  <p><span className="font-semibold">Product Name:</span> {product.name}</p>
+                  <p><span className="font-semibold">Form:</span> Lyophilized powder</p>
+                  <p><span className="font-semibold">Purity:</span> {'>'} 99%</p>
+                  <p><span className="font-semibold">SKU:</span> P-{product.name.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 10)}</p>
+                  <p><span className="font-semibold">Storage:</span> Store in a cool, dry place. Protect from light and moisture.</p>
+                </div>
+              </div>
+
+              {/* Research Information */}
+              <div className="p-6 bg-background rounded-lg border border-border">
+                <h3 className="text-xl font-bold mb-4">Research Information</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  This product is intended for research, laboratory, or analytical purposes only. It is not intended for human consumption, veterinary use, or any clinical application.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  All products are supplied as research chemicals and should be handled by trained personnel in appropriate laboratory settings.
+                </p>
+              </div>
+
+              {/* Usage Guidelines */}
+              <div className="p-6 bg-background rounded-lg border border-border">
+                <h3 className="text-xl font-bold mb-4">Usage Guidelines</h3>
+                <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+                  <li>For research and laboratory use only</li>
+                  <li>Not for human or animal consumption</li>
+                  <li>Handle in appropriate laboratory settings</li>
+                  <li>Store in cool, dry place away from light</li>
+                  <li>Keep out of reach of children</li>
+                  <li>Follow all local regulations and guidelines</li>
+                </ul>
+              </div>
+
+              {/* Important Disclaimer */}
+              <div className="p-6 bg-amber-900/20 border border-amber-700/50 rounded-lg">
+                <h3 className="text-lg font-bold mb-3 text-amber-100">Important Disclaimer</h3>
+                <div className="space-y-3 text-sm text-amber-50/80">
+                  <p>
+                    All products are sold for research, laboratory, or analytical purposes only and are not for human consumption.
+                  </p>
+                  <p>
+                    Core Peptides is a chemical supplier. Core Peptides is not a compounding pharmacy or chemical compounding facility as defined under 503A of the Federal Food, Drug, and Cosmetic act. Core Peptides is not an outsourcing facility defined under 503B of the Federal Food, Drug, and Cosmetic act.
+                  </p>
+                  <p>
+                    The statements made within this website have not been evaluated by the US Food and Drug Administration. The products we offer are not intended to diagnose, treat, cure or prevent any disease.
+                  </p>
+                  <p>
+                    Human/Animal Consumption Prohibited. Laboratory/In-Vitro Experimental Use Only.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
