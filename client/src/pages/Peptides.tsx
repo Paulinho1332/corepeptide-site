@@ -1,16 +1,14 @@
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
-import Hero from '@/components/Hero';
-import FeaturesBar from '@/components/FeaturesBar';
-import ProductCard from '@/components/ProductCard';
-import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
+import ProductCard from '@/components/ProductCard';
 import { trpc } from '@/lib/trpc';
 import { Spinner } from '@/components/ui/spinner';
 import type { Product } from '@shared/types';
 
-export default function Home() {
+export default function Peptides() {
   const [sortBy, setSortBy] = useState('popularity');
+  const [searchTerm, setSearchTerm] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
@@ -19,14 +17,27 @@ export default function Home() {
   useEffect(() => {
     if (allProducts) {
       setProducts(allProducts);
-      sortProducts(allProducts, sortBy);
+      filterAndSort(allProducts, searchTerm, sortBy);
     }
   }, [allProducts]);
 
-  const sortProducts = (productsToSort: Product[], sortType: string) => {
-    let sorted = [...productsToSort];
+  useEffect(() => {
+    filterAndSort(products, searchTerm, sortBy);
+  }, [searchTerm, sortBy]);
 
-    switch (sortType) {
+  const filterAndSort = (productsToFilter: Product[], search: string, sort: string) => {
+    let filtered = productsToFilter;
+
+    // Apply search filter
+    if (search.trim()) {
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    // Apply sort
+    let sorted = [...filtered];
+    switch (sort) {
       case 'latest':
         sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         break;
@@ -42,40 +53,43 @@ export default function Home() {
       case 'title-za':
         sorted.sort((a, b) => b.name.localeCompare(a.name));
         break;
-      default: // popularity
-        sorted = [...productsToSort];
+      default:
+        sorted = [...filtered];
     }
 
     setFilteredProducts(sorted);
   };
 
-  const handleSort = (newSort: string) => {
-    setSortBy(newSort);
-    sortProducts(products, newSort);
-  };
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />
-      <Hero />
-      <FeaturesBar />
+
+      {/* Page Header */}
+      <section className="bg-black text-white py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Peptides for Sale</h1>
+          <p className="text-gray-300 text-lg">
+            Browse our complete catalog of research-grade peptides
+          </p>
+        </div>
+      </section>
 
       {/* Products Section */}
       <section className="bg-background py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-2 text-center">
-            Research Peptides For Sale
-          </h2>
-          <p className="text-center text-muted-foreground mb-8">
-            Showing all {products.length} results
-          </p>
-
-          {/* Sort Dropdown */}
-          <div className="flex justify-end mb-8">
+          {/* Search and Sort Controls */}
+          <div className="mb-8 space-y-4 md:flex md:items-center md:justify-between md:space-y-0">
+            <input
+              type="text"
+              placeholder="Search peptides..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 px-4 py-2 bg-card text-foreground border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
+            />
             <select
               value={sortBy}
-              onChange={(e) => handleSort(e.target.value)}
-              className="px-4 py-2 bg-card text-foreground border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-4 py-2 bg-card text-foreground border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent md:ml-4"
             >
               <option value="popularity">Sort by popularity</option>
               <option value="latest">Sort by latest</option>
@@ -86,10 +100,19 @@ export default function Home() {
             </select>
           </div>
 
+          {/* Results Count */}
+          <p className="text-muted-foreground mb-8">
+            Showing {filteredProducts.length} of {products.length} products
+          </p>
+
           {/* Products Grid */}
           {isLoading ? (
             <div className="flex justify-center items-center py-20">
               <Spinner className="w-8 h-8" />
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground text-lg">No products found matching your search.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -101,7 +124,6 @@ export default function Home() {
         </div>
       </section>
 
-      <Newsletter />
       <Footer />
     </div>
   );

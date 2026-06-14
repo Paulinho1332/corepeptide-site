@@ -25,4 +25,64 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+export const products = mysqlTable("products", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  price: int("price").notNull(), // Store as cents to avoid floating point issues
+  image: text("image").notNull(),
+  description: text("description"),
+  stock: int("stock").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Product = typeof products.$inferSelect;
+export type InsertProduct = typeof products.$inferInsert;
+
+export const cartItems = mysqlTable("cartItems", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  productId: int("productId").notNull(),
+  quantity: int("quantity").default(1).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CartItem = typeof cartItems.$inferSelect;
+export type InsertCartItem = typeof cartItems.$inferInsert;
+
+export const orders = mysqlTable("orders", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  total: int("total").notNull(),
+  status: varchar("status", { length: 50 }).default("pending").notNull(),
+  shippingAddress: text("shippingAddress"),
+  billingAddress: text("billingAddress"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Order = typeof orders.$inferSelect;
+export type InsertOrder = typeof orders.$inferInsert;
+
+export const orderItems = mysqlTable("orderItems", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("orderId").notNull(),
+  productId: int("productId").notNull(),
+  quantity: int("quantity").notNull(),
+  price: int("price").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type OrderItem = typeof orderItems.$inferSelect;
+export type InsertOrderItem = typeof orderItems.$inferInsert;
+
+export const newsletterSubscriptions = mysqlTable("newsletterSubscriptions", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  subscribedAt: timestamp("subscribedAt").defaultNow().notNull(),
+  unsubscribedAt: timestamp("unsubscribedAt"),
+});
+
+export type NewsletterSubscription = typeof newsletterSubscriptions.$inferSelect;
+export type InsertNewsletterSubscription = typeof newsletterSubscriptions.$inferInsert;

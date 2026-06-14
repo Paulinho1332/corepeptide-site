@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, products, cartItems, newsletterSubscriptions } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +89,50 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+export async function getAllProducts() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(products);
+}
+
+export async function getProductById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(products).where(eq(products.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getCartItems(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(cartItems).where(eq(cartItems.userId, userId));
+}
+
+export async function addToCart(userId: number, productId: number, quantity: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.insert(cartItems).values({
+    userId,
+    productId,
+    quantity,
+  });
+  return result;
+}
+
+export async function updateCartItem(id: number, quantity: number) {
+  const db = await getDb();
+  if (!db) return null;
+  return await db.update(cartItems).set({ quantity }).where(eq(cartItems.id, id));
+}
+
+export async function removeCartItem(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  return await db.delete(cartItems).where(eq(cartItems.id, id));
+}
+
+export async function subscribeToNewsletter(email: string) {
+  const db = await getDb();
+  if (!db) return null;
+  return await db.insert(newsletterSubscriptions).values({ email });
+}
