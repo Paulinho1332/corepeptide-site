@@ -16,7 +16,7 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies and compile build folder
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm --filter client build
       - name: Commit build folder back to repository
         run: |
