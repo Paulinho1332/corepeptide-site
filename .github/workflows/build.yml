@@ -1,0 +1,27 @@
+name: Compile Frontend Production Build
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - name: Install dependencies and compile build folder
+        run: |
+          pnpm install
+          pnpm --filter client build
+      - name: Commit build folder back to repository
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@://github.com'
+          git add client/dist -f
+          git commit -m "chore: deploy compiled production assets" || echo "No changes to commit"
+          git push
