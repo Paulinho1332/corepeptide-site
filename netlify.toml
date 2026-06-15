@@ -1,13 +1,7 @@
 [build]
   base = "."
-  command = "echo 'Bypassing compilation'"
   publish = "client/dist"
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/server/:splat"
-  status = 200
-  force = true
+  command = "echo 'Bypassing build step'"
 
 [[redirects]]
   from = "/*"
